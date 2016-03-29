@@ -38,6 +38,7 @@ def mpv_np(*args, **kwargs):
         r = requests.get('http://%s:%s/%s' % (mpv_host, mpv_port, property), timeout=0.5)
       except:
         wc.prnt("", "Error connecting to mpv httpd script.")
+        raise
       else:
         if r.content == "PIPE_ERROR":
           wc.prnt("", "Pipe Error. Is mpv running?")
