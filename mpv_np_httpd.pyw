@@ -3,9 +3,6 @@ import win32pipe
 import socket
 import json
 
-## Make sure to add "input-ipc-server=\\.\pipe\mpvsocket" to your mpv config.
-## To use weechat on a remote server use an ssh (reverse) tunnel
-
 MPVSOCK = '\\\\.\pipe\mpvsocket'
 
 def getprop(property):
@@ -31,19 +28,22 @@ server_sock.bind(('127.0.0.1', 8091))
 server_sock.listen(10)
 
 while True:
-    titles = []
     cli_sock, addr = server_sock.accept()
     print 'We have opened a cli_sockection with', addr
     req = cli_sock.recv(1024)
-    prop = req.split(' ')[1][1:]
+    try:
+        prop = req.split(' ')[1][1:]
+    except:
+    
+        cli_sock.close()
+    else:
+        cli_sock.send("HTTP/1.1 200 OK\n")
+        cli_sock.send("Content-Type: text/html; encoding=utf8\n")
+        cli_sock.send('\n')
 
-    cli_sock.send("HTTP/1.1 200 OK\n")
-    cli_sock.send("Content-Type: text/html; encoding=utf8\n")
-    cli_sock.send('\n')
+        ret = getprop(prop)
+        if ret is not None:
+            ret = u'%s' % (ret)
+            cli_sock.send(ret.encode('utf-8'))
 
-    ret = getprop(prop)
-    if ret is not None:
-        formattedret = u'%s' % (ret)
-        cli_sock.send(formattedret.encode('utf-8'))
-
-    cli_sock.close()
+        cli_sock.close()
