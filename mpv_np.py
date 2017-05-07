@@ -79,7 +79,7 @@ def mpv_np(*args, **kwargs):
     size = float(rawsize) / float(1073741824)
     size = round(size, 2)
     formattedsize = '{} GiB'.format(size)
-  wc.command(wc.current_buffer(), r"/me {5}»» {4}mpv {5}«»{4} {0} {5}«»{4} {1}{5}/{4}{2} {5}«»{4} {3}".format(title, position, length, formattedsize, c1, c2))
+  wc.command(wc.current_buffer(), r'/me {5}»» {4}mpv {5}«»{4} {0} {5}«»{4} {1}{5}/{4}{2} {5}«»{4} {3}'.format(title, position, length, formattedsize, c1, c2))
   return wc.WEECHAT_RC_OK
 
 
