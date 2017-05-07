@@ -60,18 +60,18 @@ def mpv_np(*args, **kwargs):
     return wc.WEECHAT_RC_ERROR
   if rawposition < 3600:
     m, s = divmod(rawposition, 60)
-    position = '%s:%02d' % (m, s)
+    position = '{:d}:{:02d}'.format(m, s)
   else:
     m, s = divmod(rawposition, 60)
     h, m = divmod(m, 60)
-    position = '%s:%02d:%02d' % (h, m, s)
+    position = '{:d}:{:02d}:{:02d}'.format(h, m, s)
   if rawlength < 3600:
     m, s = divmod(rawlength, 60)
-    length = '%s:%02d' % (m, s)
+    length = '{:d}:{:02d}'.format(m, s)
   else:
     m, s = divmod(rawlength, 60)
     h, m = divmod(m, 60)
-    length = '%s:%02d:%02d' % (h, m, s)
+    length = '{:d}:{:02d}:{:02d}'.format(h, m, s)
   if int(rawsize) < 1073741824:
     size = int(rawsize) / 1048576
     formattedsize = '{} MiB'.format(size)
