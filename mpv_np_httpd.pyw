@@ -5,9 +5,10 @@ import json
 
 MPVSOCK = '\\\\.\pipe\mpvsocket'
 
+
 def getprop(property):
     try:
-        data = win32pipe.CallNamedPipe(MPVSOCK,'{"command":["get_property","'+property+'"]}\n',1024,0)
+        data = win32pipe.CallNamedPipe(MPVSOCK, '{"command":["get_property","' + property + '"]}\n', 1024, 0)
     except:
         print "Error getting property from named pipe."
         return "PIPE_ERROR"
@@ -34,7 +35,6 @@ while True:
     try:
         prop = req.split(' ')[1][1:]
     except:
-    
         cli_sock.close()
     else:
         cli_sock.send("HTTP/1.1 200 OK\n")
