@@ -52,7 +52,7 @@ def mpv_np(*args, **kwargs):
         return r.content
 
   try:
-    title = getprops(mpv_host, mpv_port, 'filename')
+    title = getprops(mpv_host, mpv_port, 'filename').decode('utf-8')
     rawposition = int(float(getprops(mpv_host, mpv_port, 'playback-time')))
     rawlength = int(float(getprops(mpv_host, mpv_port, 'duration')))
     rawsize = float(getprops(mpv_host, mpv_port, 'file-size'))
@@ -74,12 +74,11 @@ def mpv_np(*args, **kwargs):
     length = '{:d}:{:02d}:{:02d}'.format(h, m, s)
   if int(rawsize) < 1073741824:
     size = int(rawsize) / 1048576
-    formattedsize = '{} MiB'.format(size)
+    formattedsize = '{} MiB'.format(int(size))
   else:
     size = float(rawsize) / float(1073741824)
-    size = round(size, 2)
-    formattedsize = '{} GiB'.format(size)
-  wc.command(wc.current_buffer(), r'/me {5}»» {4}mpv {5}«»{4} {0} {5}«»{4} {1}{5}/{4}{2} {5}«»{4} {3}'.format(title, position, length, formattedsize, c1, c2))
+    formattedsize = '{:.2f} GiB'.format(size)
+  wc.command(wc.current_buffer(), u'/me {5}»» {4}mpv {5}«»{4} {0} {5}«»{4} {1}{5}/{4}{2} {5}«»{4} {3}'.format(title, position, length, formattedsize, c1, c2))
   return wc.WEECHAT_RC_OK
 
 
