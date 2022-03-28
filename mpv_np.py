@@ -42,12 +42,15 @@ def mpv_np(*args, **kwargs):
       wc.prnt('', 'Error connecting to mpv httpd script.')
       raise
     else:
-      if r.content == 'PIPE_ERROR':
+      if r.content.decode('UTF-8') == 'PIPE_ERROR':
         wc.prnt('', 'Pipe Error. Is mpv running?')
         raise Exception
-      elif r.content == 'PROPERTY_ERROR':
-        wc.prnt('', 'Property Error. idk m8 you really fucked up!')
-        raise Exception
+      elif r.content.decode('UTF-8') == 'PROPERTY_ERROR':
+        if property == 'file-size':
+          return '0'
+        else:
+          wc.prnt('', 'Property Error. idk m8 you really fucked up!')
+          raise Exception
       else:
         return r.content
 
@@ -72,13 +75,16 @@ def mpv_np(*args, **kwargs):
     m, s = divmod(rawlength, 60)
     h, m = divmod(m, 60)
     length = '{:d}:{:02d}:{:02d}'.format(h, m, s)
-  if int(rawsize) < 1073741824:
-    size = int(rawsize) / 1048576
-    formattedsize = '{} MiB'.format(int(size))
+  if int(rawsize) == 0:
+    wc.command(wc.current_buffer(), u'/me {4}»» {3}mpv {4}«»{3} {0} {4}«»{3} {1}{4}/{3}{2}'.format(title, position, length, c1, c2))
   else:
-    size = float(rawsize) / float(1073741824)
-    formattedsize = '{:.2f} GiB'.format(size)
-  wc.command(wc.current_buffer(), u'/me {5}»» {4}mpv {5}«»{4} {0} {5}«»{4} {1}{5}/{4}{2} {5}«»{4} {3}'.format(title, position, length, formattedsize, c1, c2))
+    if int(rawsize) < 1073741824:
+      size = int(rawsize) / 1048576
+      formattedsize = '{} MiB'.format(int(size))
+    else:
+      size = float(rawsize) / float(1073741824)
+      formattedsize = '{:.2f} GiB'.format(size)
+    wc.command(wc.current_buffer(), u'/me {5}»» {4}mpv {5}«»{4} {0} {5}«»{4} {1}{5}/{4}{2} {5}«»{4} {3}'.format(title, position, length, formattedsize, c1, c2))
   return wc.WEECHAT_RC_OK
 
 
