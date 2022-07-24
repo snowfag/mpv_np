@@ -59,6 +59,7 @@ def mpv_np(*args, **kwargs):
     rawposition = int(float(getprops(mpv_host, mpv_port, 'playback-time')))
     rawlength = int(float(getprops(mpv_host, mpv_port, 'duration')))
     rawsize = float(getprops(mpv_host, mpv_port, 'file-size'))
+    mediatitle = getprops(mpv_host, mpv_port, 'media-title').decode('utf-8')
   except:
     return wc.WEECHAT_RC_ERROR
   if rawposition < 3600:
@@ -76,7 +77,10 @@ def mpv_np(*args, **kwargs):
     h, m = divmod(m, 60)
     length = '{:d}:{:02d}:{:02d}'.format(h, m, s)
   if int(rawsize) == 0:
-    wc.command(wc.current_buffer(), u'/me {4}»» {3}mpv {4}«»{3} {0} {4}«»{3} {1}{4}/{3}{2}'.format(title, position, length, c1, c2))
+    if title.startswith('streamlinkpipe'):
+      wc.command(wc.current_buffer(), u'/me {2}»» {1}mpv {2}«»{1} {0}'.format(mediatitle, c1, c2))
+    else:
+      wc.command(wc.current_buffer(), u'/me {4}»» {3}mpv {4}«»{3} {0} {4}«»{3} {1}{4}/{3}{2}'.format(title, position, length, c1, c2))
   else:
     if int(rawsize) < 1073741824:
       size = int(rawsize) / 1048576
@@ -86,7 +90,6 @@ def mpv_np(*args, **kwargs):
       formattedsize = '{:.2f} GiB'.format(size)
     wc.command(wc.current_buffer(), u'/me {5}»» {4}mpv {5}«»{4} {0} {5}«»{4} {1}{5}/{4}{2} {5}«»{4} {3}'.format(title, position, length, formattedsize, c1, c2))
   return wc.WEECHAT_RC_OK
-
 
 wc.hook_command('mpv', 'mpv now playing', '', '', '', 'mpv_np', '')
 wc.hook_config('plugins.var.python.' + name + '.color1', 'config', '')
